@@ -13,7 +13,8 @@ services:
       deploy_on_push: true
     build_command: |
       corepack enable
-      yarn install --immutable --mode=skip-build
+      yarn config set enableInlineBuilds false
+      yarn install --immutable
       yarn workspace @open-swe/web build
     run_command: yarn workspace @open-swe/web start
     source_dir: /
@@ -73,7 +74,8 @@ services:
       deploy_on_push: true
     build_command: |
       corepack enable
-      yarn install --immutable --mode=skip-build
+      yarn config set enableInlineBuilds false
+      yarn install --immutable
       yarn workspace @open-swe/agent build
     run_command: yarn workspace @open-swe/agent dev
     source_dir: /
