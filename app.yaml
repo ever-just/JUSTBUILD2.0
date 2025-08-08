@@ -11,7 +11,10 @@ services:
       repo: ever-just/JUSTBUILD2.0
       branch: main
       deploy_on_push: true
-    build_command: yarn install --frozen-lockfile && yarn workspace @open-swe/web build
+    build_command: |
+      corepack enable
+      yarn install --immutable --mode=skip-build
+      yarn workspace @open-swe/web build
     run_command: yarn workspace @open-swe/web start
     source_dir: /
     environment_slug: node-js
@@ -68,7 +71,10 @@ services:
       repo: ever-just/JUSTBUILD2.0
       branch: main
       deploy_on_push: true
-    build_command: yarn install --frozen-lockfile && yarn workspace @open-swe/agent build
+    build_command: |
+      corepack enable
+      yarn install --immutable --mode=skip-build
+      yarn workspace @open-swe/agent build
     run_command: yarn workspace @open-swe/agent dev
     source_dir: /
     environment_slug: node-js
