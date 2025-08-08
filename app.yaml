@@ -12,9 +12,11 @@ services:
       branch: main
       deploy_on_push: true
     build_command: |
+      export NODE_OPTIONS="--max-old-space-size=4096"
       corepack enable
+      corepack prepare yarn@3.5.1 --activate
       yarn config set enableInlineBuilds false
-      yarn install --immutable
+      yarn install --no-immutable
       yarn workspace @open-swe/web build
     run_command: yarn workspace @open-swe/web start
     source_dir: /
@@ -73,9 +75,11 @@ services:
       branch: main
       deploy_on_push: true
     build_command: |
+      export NODE_OPTIONS="--max-old-space-size=4096"
       corepack enable
+      corepack prepare yarn@3.5.1 --activate
       yarn config set enableInlineBuilds false
-      yarn install --immutable
+      yarn install --no-immutable
       yarn workspace @open-swe/agent build
     run_command: yarn workspace @open-swe/agent dev
     source_dir: /
