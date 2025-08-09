@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "apps/web/src/app/api/auth/github/callback/route.ts": {
+      "maxDuration": 10
+    }
+  }
+}
