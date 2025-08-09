@@ -22,6 +22,8 @@ export async function GET(_request: NextRequest) {
     authUrl.searchParams.set("redirect_uri", redirectUri);
     authUrl.searchParams.set("allow_signup", "true");
     authUrl.searchParams.set("state", state);
+    // Add required scopes to access user installations and user info
+    authUrl.searchParams.set("scope", "read:user user:email");
 
     // Create response with redirect and store state in a cookie
     const response = NextResponse.redirect(authUrl.toString());
