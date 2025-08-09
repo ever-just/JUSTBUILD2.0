@@ -33,7 +33,10 @@ export async function GET(request: NextRequest) {
     }
 
     // Create the response that will redirect back to the app
-    const response = NextResponse.redirect(returnTo);
+    // Add a timestamp query parameter to force refresh
+    const redirectUrl = new URL(returnTo, request.url);
+    redirectUrl.searchParams.set("installation_completed", Date.now().toString());
+    const response = NextResponse.redirect(redirectUrl);
 
     // Clear cookies as they're no longer needed
     const expiredCookieOptions = {
