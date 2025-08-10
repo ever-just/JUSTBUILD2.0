@@ -1,6 +1,69 @@
 {
-  "cSpell.words": [
-    "DAYTONA",
-    "helicunate"
-  ]
+  // Cursor MCP (Model Context Protocol) Settings
+  "cursor.mcp.servers": {
+    "vercel-mcp": {
+      "command": "npx",
+      "args": ["-y", "@open-mcp/vercel"],
+      "env": {
+        "API_KEY": "lcinQcFYVmNBZd85QvXTw3cr"
+      },
+      "enabled": true,
+      "description": "Vercel MCP server for interacting with Vercel deployments"
+    },
+    "langgraph-docs": {
+      "name": "LangGraph Docs",
+      "command": "uvx",
+      "args": [
+        "--from",
+        "mcpdoc",
+        "mcpdoc",
+        "--urls",
+        "LangGraphPY:https://langchain-ai.github.io/langgraph/llms.txt LangGraphJS:https://langchain-ai.github.io/langgraphjs/llms.txt",
+        "--transport",
+        "stdio"
+      ],
+      "stderr": "inherit",
+      "enabled": true,
+      "description": "LangGraph documentation MCP server (already configured in project)"
+    }
+  },
+  
+  // TypeScript Configuration
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  
+  // ESLint Configuration
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  
+  // Editor Settings
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  
+  // File Associations
+  "files.associations": {
+    "*.mdx": "markdown"
+  },
+  
+  // Exclude patterns
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/.next": true,
+    "**/dist": true,
+    "**/.turbo": true
+  },
+  
+  // Search exclude patterns
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/pnpm-lock.yaml": true,
+    "**/.next": true,
+    "**/dist": true
+  }
 }

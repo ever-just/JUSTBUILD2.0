@@ -1694,6 +1694,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hono/node-server@npm:^1.18.1":
+  version: 1.18.1
+  resolution: "@hono/node-server@npm:1.18.1"
+  peerDependencies:
+    hono: ^4
+  checksum: 9f14b4350d764d2a49adccfc175a68e67f17acfc7df0cf5396ff3560dd8c95b6aac7426ab495fdf2fa30bce7166f2250f44d2a5c760c3eff44dcb76188153d1f
+  languageName: node
+  linkType: hard
+
 "@hono/zod-validator@npm:^0.2.2":
   version: 0.2.2
   resolution: "@hono/zod-validator@npm:0.2.2"
@@ -4095,6 +4104,7 @@ __metadata:
     "@daytonaio/sdk": ^0.25.5
     "@eslint/eslintrc": ^3.1.0
     "@eslint/js": ^9.19.0
+    "@hono/node-server": ^1.18.1
     "@jest/globals": ^29.7.0
     "@langchain/anthropic": ^0.3.26
     "@langchain/community": ^0.3.47

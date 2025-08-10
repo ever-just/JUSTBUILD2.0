@@ -1,0 +1,131 @@
+name: open-swe-justbuild
+region: nyc
+# Domain removed - it's handled by Vercel now
+
+services:
+  # Backend LangGraph Agent Service Only
+  - name: agent
+    github:
+      repo: ever-just/JUSTBUILD2.0
+      branch: main
+      deploy_on_push: true
+    source_dir: /
+    build_command: ./scripts/digitalocean-build.sh
+    run_command: ./scripts/digitalocean-start.sh
+    http_port: 2024
+    instance_count: 1
+    instance_size_slug: professional-xs
+    health_check:
+      http_path: /api/agent/ok
+    envs:
+      # Core Configuration
+      - key: NODE_ENV
+        value: production
+        scope: RUN_AND_BUILD_TIME
+      - key: PORT
+        value: "2024"
+        scope: RUN_AND_BUILD_TIME
+      - key: OPEN_SWE_APP_URL
+        value: https://justbuild.everjust.com
+        scope: RUN_AND_BUILD_TIME
+      - key: SKIP_CI_UNTIL_LAST_COMMIT
+        value: "true"
+        scope: RUN_AND_BUILD_TIME
+
+      # LangSmith Configuration
+      - key: LANGCHAIN_PROJECT
+        value: default
+        scope: RUN_AND_BUILD_TIME
+      - key: LANGCHAIN_API_KEY
+        value: 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
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+      - key: LANGCHAIN_TRACING_V2
+        value: "true"
+        scope: RUN_AND_BUILD_TIME
+      - key: LANGCHAIN_TEST_TRACKING
+        value: "false"
+        scope: RUN_AND_BUILD_TIME
+
+      # GitHub App Configuration
+      - key: GITHUB_APP_NAME
+        value: justbuild2-0
+        scope: RUN_AND_BUILD_TIME
+      - key: GITHUB_APP_ID
+        value: "1751460"
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+      - key: GITHUB_APP_PRIVATE_KEY
+        value: "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAxsc1jJuX8Rk+c3DFecNGAArOeK9vKpxse45Xgj3G08yx13sNfhk/4qzHokGfLcH60BwSjXJWHpVZ5d92+eVRzrQvE0QG59DoOVEP0HhkG5JOn5gdi6UspP2gBLeSDhrXqofqZwt1MlVmpJTN7AtEW+0fJQfmMbzzEI/gdBHz4feq228yKo+irKPU+bkXhWOk+U/UUPjyalDpnXAxZI4OrEjvGVOPEOIcy18IOW8lkM51MwT9BwdVdCsc5slHZG8M461odz6oUH4EnPhkW3TDhxFAP9frPvbT20cibiKevAswlsoSuverubi9zl/1H5O7BxaTf/I7qTnhQeEu0bSZoQIDAQABAoIBAGpdFi5S447DL0OeSEzLTJ2hKrIxTY7DfNjwZarvW4DhuxfOZH3hDOpCAeC0tHRLo+XP362ITMS4rg3u8T7ukkPE7pukfv10L47b7VZj1U1bkG6detHKZIU0oXdksuaRPm2lpKvW2bNBN1dBuJ5huQZnb47lFyvuKzHlivkQ0itK5XAUQ8CLhff2rKMRZnJ/EJ3HUUQkPjt5LmLzRvKQTjOCr1WjvIrWllQT0V3UJDOgw6lJx/cGPLsOZPnMFdq1O6C9oPYRNh4Rw3eJN9j3KQLSghHHZhFT+QnZOQ5XpV9gKNZYJoE7g++LkYdE5v3UVy31jQhJNu9hPWOgEWrw5gECgYEA4VbJnw2VPqR5lBJ5DYZNCn7T3KpKE8qH5P8w8H2JA6yOzlqOqYyfO7k3lQX8tV9t8VwJZvM4KYQnv1kD5Q8v9Y2P6YYM2g4sN8aJ3Y4Q1dBkJ7W8vNaTl6QLZc4Q3sUm3m4Yz6mQpV4V2YJH6yKl9l8kRQ2H1mMJ3K5H8e8A2SECgYEA5QnUYJrM2p4Q8VV4YYnZH6K4Pj8z2A5Sl7Q8T1Q6VKj3N9Z4VPHR8MQK5H3W1P9T2fZYQs1Kl8YQQ5TLn1P2Q8WsKT8YVV1k3L4Y6Q7N2M4vZgYQoH5Q2y1K3sT8Q6A9AUKOw+7vFB0Q8JQSr2QT8V3H5Q9nNzQ2QYXdKVJYJrQIDAQAB+89h3aTrJlVQ==\n-----END RSA PRIVATE KEY-----"
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+      - key: GITHUB_WEBHOOK_SECRET
+        value: 5f8e7d9c6b3a4f2e1d8c7b6a5f4e3d2c1b0a9f8e7d6c5b4a3f2e1d0c9b8a7f6e
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+
+      # Security
+      - key: SECRETS_ENCRYPTION_KEY
+        value: e0067c025178b24b5d87a19857a6975d3a287d78b8617db1c9a5b322dddb857f
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+
+      # LLM Provider Keys (add values if you have them)
+      - key: ANTHROPIC_API_KEY
+        value: ""
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+      - key: OPENAI_API_KEY
+        value: ""
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+      - key: GOOGLE_API_KEY
+        value: ""
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+
+      # Infrastructure (add values if you have them)
+      - key: DAYTONA_API_KEY
+        value: ""
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+
+      # Tools (add values if you have them)
+      - key: FIRECRAWL_API_KEY
+        value: ""
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+
+  # Optional: Keep docs service if needed
+  - name: docs
+    github:
+      repo: ever-just/JUSTBUILD2.0
+      branch: main
+      deploy_on_push: true
+    source_dir: /
+    build_command: |
+      export NODE_OPTIONS="--max-old-space-size=4096"
+      npm install -g turbo@^2.5.0
+      npm install --package-lock=false
+      npx turbo build --filter=@open-swe/docs
+    run_command: npx turbo start --filter=@open-swe/docs
+    http_port: 3001
+    instance_count: 1
+    instance_size_slug: professional-xs
+
+ingress:
+  rules:
+    # Backend API routes
+    - match:
+        path:
+          prefix: /api/agent
+      component:
+        name: agent
+        rewrite: /
+
+    # Docs routes
+    - match:
+        path:
+          prefix: /docs
+      component:
+        name: docs

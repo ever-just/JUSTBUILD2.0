@@ -1,0 +1,24 @@
+# Vercel Environment Variables Template
+# Copy values from backend-env-variables.txt and fill in missing ones
+
+# API Configuration
+NEXT_PUBLIC_API_URL=https://justbuild.everjust.com/api/agent
+LANGGRAPH_API_URL=https://justbuild.everjust.com/api/agent
+
+# GitHub App Configuration
+NEXT_PUBLIC_GITHUB_APP_CLIENT_ID=
+GITHUB_APP_CLIENT_SECRET=
+GITHUB_APP_ID=
+GITHUB_APP_PRIVATE_KEY=
+GITHUB_APP_REDIRECT_URI=https://justbuild.everjust.com/api/auth/github/callback
+
+# Security
+SECRETS_ENCRYPTION_KEY=
+NEXTAUTH_URL=https://justbuild.everjust.com
+NEXTAUTH_SECRET=
+
+# Build Configuration
+SKIP_ENV_VALIDATION=true
+
+# Optional: If using different domain initially
+# NEXTAUTH_URL=https://justbuild-frontend.vercel.app

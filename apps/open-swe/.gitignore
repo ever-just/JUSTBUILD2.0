@@ -30,3 +30,4 @@ dist-ssr
 evals/dataset/scripts/*
 langbench/scripts/*
 scripts/
+.vercel

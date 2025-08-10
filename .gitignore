@@ -33,6 +33,7 @@ yarn-error.log*
 # local env files
 .env*.local
 .env
+vercel-env-variables.txt
 
 # vercel
 .vercel
@@ -47,3 +48,6 @@ credentials.json
 .langgraph_api
 
 **/.claude/settings.local.json
+
+# Cursor settings
+.cursor/

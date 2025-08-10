@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@daytonaio/sdk": "^0.25.5",
+    "@hono/node-server": "^1.18.1",
     "@langchain/anthropic": "^0.3.26",
     "@langchain/community": "^0.3.47",
     "@langchain/core": "^0.3.65",

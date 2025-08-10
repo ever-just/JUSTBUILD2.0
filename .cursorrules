@@ -1,0 +1,39 @@
+# Cursor Rules for JUSTBUILD2.0 Project
+
+## MCP (Model Context Protocol) Configuration
+
+This project supports MCP servers for enhanced AI capabilities. To connect Vercel MCP:
+
+### 1. Deploy Vercel MCP Server
+- Deploy the Vercel MCP server to your Vercel account
+- Get your deployment URL (e.g., https://your-vercel-mcp.vercel.app/api/mcp)
+
+### 2. Configure in Cursor Settings
+1. Open Cursor Settings (Cmd+, on Mac)
+2. Navigate to: Features > MCP
+3. Click "+ Add New MCP Server"
+4. Configure:
+   - Name: "Vercel MCP"
+   - Type: "Streamable HTTP"
+   - URL: Your deployed MCP server URL
+5. Save the configuration
+
+### 3. Default MCP Servers in Project
+This project already includes a default LangGraph docs MCP server configured in:
+- `packages/shared/src/constants.ts` - DEFAULT_MCP_SERVERS
+- `packages/shared/src/open-swe/mcp.ts` - MCP configuration schemas
+
+### 4. Custom MCP Servers
+You can add custom MCP servers in the web UI settings under the "mcpServers" configuration field as JSON.
+
+## Project Context
+- This is a LangGraph-based OpenSWE application
+- MCP integration is already built into the codebase
+- The project uses TypeScript and Next.js for the web interface
+- Authentication is handled via GitHub OAuth
+
+## Key MCP-Related Files
+- `apps/open-swe/src/utils/mcp-client.ts` - MCP client implementation
+- `apps/open-swe/src/utils/mcp-output/` - MCP output handling
+- `packages/shared/src/open-swe/mcp.ts` - MCP type definitions
+

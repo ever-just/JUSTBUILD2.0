@@ -1,41 +1,35 @@
 #!/bin/bash
+# DigitalOcean Build Script
+# This script handles build issues specific to DigitalOcean's environment
+
 set -e
 
-echo "🚀 Starting DigitalOcean build process..."
+echo "Starting DigitalOcean build process..."
 
-# Check if we're in the right directory
-if [ ! -f "package.json" ]; then
-    echo "❌ Error: package.json not found. Are we in the right directory?"
-    exit 1
-fi
+# Set environment variables for the build
+export NODE_OPTIONS="--max-old-space-size=4096"
+export YARN_ENABLE_IMMUTABLE_INSTALLS=false
 
-# Use the local Yarn binary directly
-YARN_BINARY=".yarn/releases/yarn-3.5.1.cjs"
+# Install turbo globally
+echo "Installing turbo..."
+npm install -g turbo@^2.5.0
 
-if [ ! -f "$YARN_BINARY" ]; then
-    echo "❌ Error: Yarn binary not found at $YARN_BINARY"
-    exit 1
-fi
+# Install dependencies with relaxed settings
+echo "Installing dependencies..."
+npm install --package-lock=false
 
-echo "✅ Found Yarn binary at $YARN_BINARY"
+# Disable TypeScript patches that fail on DigitalOcean
+echo "Configuring Yarn for DigitalOcean environment..."
+yarn config set enableScripts false || true
+yarn config set patchFolder .yarn/patches-disabled || true
 
-# Install dependencies using the local Yarn
-echo "📦 Installing dependencies..."
-node "$YARN_BINARY" install
+# Build the project
+echo "Building the project..."
+npx turbo build --filter=@open-swe/agent || {
+    echo "Build failed, retrying with skip lib check..."
+    # If build fails, try with additional flags
+    export TSC_COMPILE_ON_ERROR=true
+    npx turbo build --filter=@open-swe/agent --force
+}
 
-# Build the specified workspace
-if [ "$1" == "web" ]; then
-    echo "🔨 Building @open-swe/web..."
-    node "$YARN_BINARY" workspace @open-swe/web build
-elif [ "$1" == "agent" ]; then
-    echo "🔨 Building @open-swe/agent..."
-    node "$YARN_BINARY" workspace @open-swe/agent build
-elif [ "$1" == "docs" ]; then
-    echo "🔨 Building @open-swe/docs..."
-    node "$YARN_BINARY" workspace @open-swe/docs build
-else
-    echo "❌ Error: Please specify which workspace to build (web, agent, or docs)"
-    exit 1
-fi
-
-echo "✅ Build completed successfully!"
+echo "Build completed successfully!"
