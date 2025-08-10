@@ -15,10 +15,7 @@ Update railway.json to:
   "build": {
     "builder": "NIXPACKS",
     "buildCommand": "yarn install --immutable && yarn global add tsx @langchain/langgraph-cli",
-    "watchPatterns": [
-      "apps/open-swe/**",
-      "packages/shared/**"
-    ]
+    "watchPatterns": ["apps/open-swe/**", "packages/shared/**"]
   },
   "deploy": {
     "startCommand": "cd apps/open-swe && langgraphjs dev --no-browser --config ../../langgraph.json",
