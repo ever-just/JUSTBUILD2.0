@@ -43,8 +43,8 @@ COPY --from=builder /app/langgraph.json ./langgraph.json
 # Install production dependencies only (with fallback)
 RUN yarn workspaces focus @open-swe/agent --production || echo "Skipping production focus"
 
-# Ensure langgraph CLI is installed
-RUN cd /app && yarn add @langchain/langgraph-cli || npm install @langchain/langgraph-cli
+# Ensure langgraph CLI and react (for SDK compatibility) are installed
+RUN cd /app && yarn add @langchain/langgraph-cli react react-dom || npm install @langchain/langgraph-cli react react-dom
 
 # Set environment
 ENV NODE_ENV=production
