@@ -16,6 +16,7 @@ Railway is caching the old build configuration. Here's how to force it to use ou
 ## Option 2: Force Rebuild via Command
 
 If you have Railway CLI installed:
+
 ```bash
 railway up --no-cache
 ```
