@@ -43,6 +43,9 @@ COPY --from=builder /app/langgraph.json ./langgraph.json
 # Install production dependencies only (with fallback)
 RUN yarn workspaces focus @open-swe/agent --production || echo "Skipping production focus"
 
+# Ensure langgraph CLI is installed
+RUN cd /app && yarn add @langchain/langgraph-cli || npm install @langchain/langgraph-cli
+
 # Set environment
 ENV NODE_ENV=production
 ENV PORT=2024
@@ -54,5 +57,11 @@ EXPOSE 2024
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD node -e "require('http').get('http://localhost:2024/api/agent/ok', (res) => process.exit(res.statusCode === 200 ? 0 : 1))"
 
-# Start the application
-CMD ["yarn", "workspace", "@open-swe/agent", "dev"]
+# Create empty .env file to avoid ENOENT error
+RUN touch /app/apps/open-swe/.env
+
+# Set working directory to app root where langgraph.json is located
+WORKDIR /app
+
+# Start the application using npx to ensure langgraphjs is found
+CMD ["npx", "langgraphjs", "dev", "--no-browser", "--config", "langgraph.json"]
