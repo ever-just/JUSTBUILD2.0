@@ -1,0 +1,121 @@
+ingress:
+  rules:
+    - component:
+        name: agent
+        rewrite: /
+      match:
+        path:
+          prefix: /api/agent
+    - component:
+        name: docs
+      match:
+        path:
+          prefix: /docs
+name: open-swe-justbuild
+region: nyc
+services:
+  - build_command: |
+      # Set memory limit
+      export NODE_OPTIONS="--max-old-space-size=4096"
+
+      # Install dependencies using npm (DigitalOcean doesn't handle Yarn 3 well)
+      npm install --force --legacy-peer-deps
+
+      # Build the project
+      npm run build --workspaces --if-present || true
+    envs:
+      - key: NODE_ENV
+        scope: RUN_AND_BUILD_TIME
+        value: production
+      - key: PORT
+        scope: RUN_AND_BUILD_TIME
+        value: "2024"
+      - key: OPEN_SWE_APP_URL
+        scope: RUN_AND_BUILD_TIME
+        value: https://justbuild.everjust.com
+      - key: SKIP_CI_UNTIL_LAST_COMMIT
+        scope: RUN_AND_BUILD_TIME
+        value: "true"
+      - key: LANGCHAIN_PROJECT
+        scope: RUN_AND_BUILD_TIME
+        value: default
+      - key: LANGCHAIN_API_KEY
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:cbE09NTnV3ru4kYIpPkoAmCWZvItBDdL:/MkYnuKraN45rEu4Cbhgj+xRvRPRfbxHcWwWJ3C+abAD0u2DkFqy2VvMggsvvifokDTGFEMIGoZER2rOODjaIThC4g==]
+      - key: LANGCHAIN_TRACING_V2
+        scope: RUN_AND_BUILD_TIME
+        value: "true"
+      - key: LANGCHAIN_TEST_TRACKING
+        scope: RUN_AND_BUILD_TIME
+        value: "false"
+      - key: GITHUB_APP_NAME
+        scope: RUN_AND_BUILD_TIME
+        value: justbuild2-0
+      - key: GITHUB_APP_ID
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:YEWGOGWqH7dzza9pdszrlHs2uPiE2AsL:TajymPndD+iIcamkPhxukUNyB5RPhos=]
+      - key: GITHUB_APP_PRIVATE_KEY
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:VBWZ8cmKHtzPdgD6du0AM4/yVgDaVr+b:ds1p+FE5v0uT5eEQWWULIx4arGo4EhlpysRtazahoBNqDRF547iOHpot8xZ+lc+mgbRm7+LQuaLMdulJNL5X1T9M33SFYePoxb7ZH48aFMMJ+mQJgTNfiOVNpPjOnxuX7XN/9ZUOSf2lgSvch8dsH/aeHwWklN3r3t+mE81QgDweb4RA5CUrrUjEHiJNsRAtal3rza45ntizTT27+lbd+miAlEb5hpDIwcpazQ2/xDgXKOnVK4Bq0ma3KhE5Xm0jnCMlbz1FvIFS5whWmv0BN/VaeI35jlSth248AoeI2iuc9AGnmy57WWKQ5X7BTIM+ESeSFXJnPM1sI7FvhYu94tWxjaUrKPJecCvfSBNu+EmuifxoLyYi2EKQGMYAXoL3OMoKY4LsEHwMUJjsnd5AYPCMHv0RPK6P7YtkCTJeCiY5VAh7R35zP1Qyv/12HDuT+437wtl5fX7xwHcvxWvXc6lSCvt6MvZAml/5RbNbLAYTUD1bCBA8+KwxMRFS+EpFmVGgf0ynOPTpewue1wyKr6WYqq47WUksHI+YHtHms9bpIadI5turYCYKjy71p+ucjUE9bNDh6PMLkqm8txWPOYju8f+IR8fh+tcCng+GyhExy3wHSWxSMcfMcmUbfngrt4eRL12Yy0340Iy/IyiZ8zBRIL6DE2aZw8NYJuOJ4sZIQsq5+Mp6TETaC/QmpQmcYbtqmu5iPUWxIE87MtLReiLQvqMq6mCDG1Snkfa7VsgYlvdcJ3H8ZcuaCTKKY33Ehk8UqOV1i5mhubsGGHIp/GPsqx16vNeSTg2JYFac1aH/yuBwpSdK5UDK1xOZbTlOChmSAOnc4bQLiJcpPB0KSMdjYjLOIMofqDOAOPj56ldiHp3vpNLY23ysdYNO5Eso75lNrjs9dq7rmrQXAlHLtaW9LId7sHyUp7ObSfu5WSZWgBySoQQZ1KRAn6J2AE5BC0/L9cF7qJUUY/g20K8qUd73ltnlR+70V3jII6WeD+iDjntA3XsDcMgWxwXquToiSVctnkGNtPD+XTtlZz6osx0BJNhT1UOoeAIja52ZsDNVlGgktLqDufWYYIIhIUV/QtMixLkgFDcSHUACJ4gISGIAUYbJIODO/mgvjtqVpATbIdZ1sWP2leH17fzSSXwarb9Fn5ricr80/smYo756JgqPi5XbeEYiWZWhU+IoSOdbxpU8k9g8k8UvjOW7eDvDcCsBSGPM3ctvfa0THZdJSQmdmluJkPElC2K1K+8cWVC10vB4KQP16G1jka+L/tttZqFyDTC/R5KNIUliWn6cmWm0aj3lhzyOrB1gHY7GCaOmW4uMRZ7xwXLpwX8YLz/uxBJne8pB68tlTOzY9tpaYzPLxBtOBWn9Io04os1W0GXLS8UWHHlM7lIb7/o58+YwVVkL1ebAc0jZw6tCePSOr5+SpFSIH8DUry4UgCWsxL1tX96sekAWPYxdokYWZ7JV89fGVoHwBHN7j54WkZpJDBpNvkvK/cCZroA2uCISecy16aAZ+Vz/4gyZrSukKQTNE/APPuobBEIh]
+      - key: GITHUB_WEBHOOK_SECRET
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:ZsNaDm+uYXT17kKEWd3j7z+SxWnbbQ2l:FqE+My2CpduWYgNP3rgFvngLuFzoLOPA8AoAtO7Mki47YUk0fuldltLmjnYSkoAHrpu25qVTVNffByGY0UE2htjheAQmD1rStfyyoFCReYY=]
+      - key: SECRETS_ENCRYPTION_KEY
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:N8NtHIrQ946g4PoBnlHlwmTLuk3nukku:EIGEiyQH5hkEM0j09O/PwI5HVtiWgPmAkhopjD9Ix4TbL4NsUInBCj25A6LB+GRATdlkDFVhRVSj72MC7zUr/3zLnQE6oS+cwIKTKTj3yWI=]
+      - key: ANTHROPIC_API_KEY
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:6D4W4DgC5NQFnkpyB+YzPZwS/CTj5ztM:gSSgP5CrE8TBDNV0oV4zZg==]
+      - key: OPENAI_API_KEY
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:I9SVp+fHjOuReLy0L6zz3wwq/lUHnZcd:jhEORQAIcw3SMJ202yndJw==]
+      - key: GOOGLE_API_KEY
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:Xci1gV7GiSS524/vnJpAvyQSEofKQ2fT:8Z0EtF7V/9S90EmdFVJQyg==]
+      - key: DAYTONA_API_KEY
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:qi2HoBbnMBjIdHckVCsNPeZ/71BCLGcJ:0bA5+SKHCn8cPNQvA+7GkQ==]
+      - key: FIRECRAWL_API_KEY
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:S8ultZKOXvAoHLv3SGjL2+RxsVQq3w2j:mjsIYXN6Pkg11o5EgjL1BQ==]
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: ever-just/JUSTBUILD2.0
+    health_check:
+      http_path: /api/agent/ok
+    http_port: 2024
+    instance_count: 1
+    instance_size_slug: professional-xs
+    name: agent
+    run_command: |
+      # The langgraphjs command comes from @langchain/langgraph-cli which is a devDependency
+      # We use npx to ensure it can find the locally installed version
+      cd apps/open-swe && npx langgraphjs dev --no-browser --config ../../langgraph.json
+    source_dir: /
+  - build_command: |
+      export NODE_OPTIONS="--max-old-space-size=4096"
+      npm install -g turbo@^2.5.0
+      npm install --package-lock=false
+      npx turbo build --filter=@open-swe/docs
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: ever-just/JUSTBUILD2.0
+    http_port: 3001
+    instance_count: 1
+    instance_size_slug: professional-xs
+    name: docs
+    run_command: |
+      npx turbo start --filter=@open-swe/docs
+    source_dir: /

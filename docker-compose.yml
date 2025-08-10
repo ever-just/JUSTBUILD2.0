@@ -1,0 +1,87 @@
+version: '3.8'
+
+services:
+  langgraph-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - "2024:2024"
+    environment:
+      - NODE_ENV=production
+      - PORT=2024
+      # LangSmith Configuration
+      - LANGCHAIN_PROJECT=${LANGCHAIN_PROJECT}
+      - LANGCHAIN_API_KEY=${LANGCHAIN_API_KEY}
+      - LANGCHAIN_TRACING_V2=${LANGCHAIN_TRACING_V2}
+      - LANGCHAIN_TEST_TRACKING=${LANGCHAIN_TEST_TRACKING}
+      # GitHub App Configuration
+      - GITHUB_APP_NAME=${GITHUB_APP_NAME}
+      - GITHUB_APP_ID=${GITHUB_APP_ID}
+      - GITHUB_APP_PRIVATE_KEY=${GITHUB_APP_PRIVATE_KEY}
+      - GITHUB_WEBHOOK_SECRET=${GITHUB_WEBHOOK_SECRET}
+      # Security
+      - SECRETS_ENCRYPTION_KEY=${SECRETS_ENCRYPTION_KEY}
+      # LLM Providers
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      # Infrastructure
+      - DAYTONA_API_KEY=${DAYTONA_API_KEY}
+      - OPEN_SWE_LOCAL_MODE=${OPEN_SWE_LOCAL_MODE:-false}
+      # Tools
+      - FIRECRAWL_API_KEY=${FIRECRAWL_API_KEY}
+      # App URL
+      - OPEN_SWE_APP_URL=${OPEN_SWE_APP_URL}
+    volumes:
+      # For local development - mount source code
+      - ./apps/open-swe/src:/app/apps/open-swe/src:ro
+      - ./packages/shared/src:/app/packages/shared/src:ro
+      # For local mode - mount project directory
+      - ${OPEN_SWE_LOCAL_PROJECT_PATH:-./projects}:/projects
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:2024/api/agent/ok"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - langgraph-network
+
+  # Optional: Redis for state management (future enhancement)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - langgraph-network
+    profiles:
+      - with-redis
+
+  # Optional: PostgreSQL for persistence (future enhancement)
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=langgraph
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-langgraph}
+      - POSTGRES_DB=langgraph
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - langgraph-network
+    profiles:
+      - with-postgres
+
+networks:
+  langgraph-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+  postgres-data:

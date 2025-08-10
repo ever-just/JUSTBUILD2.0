@@ -1,0 +1,24 @@
+# DigitalOcean Run Command Fix
+
+## Replace the run_command section in your App Spec with:
+
+```yaml
+run_command: |
+  cd apps/open-swe && npx langgraphjs dev --no-browser --config ../../langgraph.json
+```
+
+## Full context - this is what the agent service section should look like:
+
+```yaml
+services:
+  - name: agent
+    # ... other config ...
+    run_command: |
+      cd apps/open-swe && npx langgraphjs dev --no-browser --config ../../langgraph.json
+```
+
+## Why this works:
+
+1. `npx` automatically finds executables installed in node_modules/.bin/
+2. This ensures langgraphjs is found regardless of PATH configuration
+3. The command matches exactly what's in the package.json dev script but with npx handling the binary resolution

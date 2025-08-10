@@ -7,12 +7,14 @@ We've implemented a comprehensive fix for the persistent DigitalOcean build fail
 ## Key Changes Made
 
 ### 1. Updated Build Script (`scripts/digitalocean-build.sh`)
+
 - **Changed from `npm install` to `yarn install`** - This is critical for Yarn 3.x workspaces
 - Added fallback to `yarn install --no-immutable` if the first attempt fails
 - Explicitly installs missing type definitions: `@tsconfig/recommended`, `@types/jest`, `@types/node`
 - Creates fallback TypeScript configurations that don't depend on external packages
 
 ### 2. Created Fallback TypeScript Configurations
+
 - `packages/shared/tsconfig.build.json` - Fallback for the shared package
 - `apps/open-swe/tsconfig.build.json` - Fallback for the agent package
 - These configs:
@@ -21,6 +23,7 @@ We've implemented a comprehensive fix for the persistent DigitalOcean build fail
   - Exclude all test files from compilation
 
 ### 3. Updated Build Scripts in package.json Files
+
 - `packages/shared/package.json`: Build tries main config, then fallback, then continues with warnings
 - `apps/open-swe/package.json`: Same fallback strategy
 
@@ -49,6 +52,7 @@ The deployment should now succeed. Monitor for:
 ## If Issues Persist
 
 If the build still fails:
+
 1. Check if it's using the latest commit (`4a5bb42`)
 2. Look for different error messages (the previous errors should be gone)
 3. The build script now has multiple fallback strategies, so it should succeed
@@ -56,6 +60,7 @@ If the build still fails:
 ## Manual Verification Required
 
 Once the deployment succeeds:
+
 1. Get the new backend URL from DigitalOcean dashboard
 2. Update Vercel's `LANGGRAPH_API_URL` if the URL changed
 3. Test the full application flow
