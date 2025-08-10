@@ -55,3 +55,6 @@ credentials.json
 # Environment variable files with secrets
 RAILWAY_ENV_VARS.txt
 *_ENV_VARS.txt
+
+# Force rebuild marker
+.railway-rebuild-*
