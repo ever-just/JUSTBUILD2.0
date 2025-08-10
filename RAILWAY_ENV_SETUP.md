@@ -7,6 +7,7 @@ The container is starting successfully but needs environment variables!
 Go to your Railway service → **Variables** tab and add these (from your backend-env-variables.txt):
 
 ### Required Variables:
+
 ```
 GITHUB_APP_ID=your_value
 GITHUB_APP_NAME=your_value
