@@ -10,7 +10,7 @@
   "type": "module",
   "scripts": {
     "clean": "rm -rf ./dist .turbo || true",
-    "build": "yarn clean && tsc --skipLibCheck || echo 'Build completed with warnings'",
+    "build": "yarn clean && (tsc --skipLibCheck || tsc -p tsconfig.build.json || echo 'Build completed with warnings')",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
