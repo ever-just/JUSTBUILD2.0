@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["nodejs-18_x", "yarn-1_x"]
+
+[phases.install]
+cmd = "npm install -g corepack@0.24.1 && corepack enable && yarn install --immutable --network-timeout 600000"
+
+[phases.build]
+cmd = "bash scripts/railway-simple-build.sh"
+
+[start]
+cmd = "yarn workspace @open-swe/agent dev"
