@@ -58,6 +58,41 @@
       "import": "./dist/index.js",
       "require": "./dist/index.js"
     },
+    "./messages": {
+      "types": "./dist/messages.d.ts",
+      "import": "./dist/messages.js",
+      "require": "./dist/messages.js"
+    },
+    "./constants": {
+      "types": "./dist/constants.d.ts",
+      "import": "./dist/constants.js",
+      "require": "./dist/constants.js"
+    },
+    "./open-swe/types": {
+      "types": "./dist/open-swe/types.d.ts",
+      "import": "./dist/open-swe/types.js",
+      "require": "./dist/open-swe/types.js"
+    },
+    "./open-swe/tools": {
+      "types": "./dist/open-swe/tools.d.ts",
+      "import": "./dist/open-swe/tools.js",
+      "require": "./dist/open-swe/tools.js"
+    },
+    "./open-swe/local-mode": {
+      "types": "./dist/open-swe/local-mode.d.ts",
+      "import": "./dist/open-swe/local-mode.js",
+      "require": "./dist/open-swe/local-mode.js"
+    },
+    "./open-swe/llm-task": {
+      "types": "./dist/open-swe/llm-task.d.ts",
+      "import": "./dist/open-swe/llm-task.js",
+      "require": "./dist/open-swe/llm-task.js"
+    },
+    "./github/*": {
+      "types": "./dist/github/*.d.ts",
+      "import": "./dist/github/*.js",
+      "require": "./dist/github/*.js"
+    },
     "./*": {
       "types": "./dist/*.d.ts",
       "import": "./dist/*.js",

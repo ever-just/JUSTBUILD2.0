@@ -2,7 +2,7 @@
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
     "builder": "NIXPACKS",
-    "buildCommand": "bash scripts/railway-build.sh",
+    "buildCommand": "bash scripts/railway-simple-build.sh",
     "watchPatterns": [
       "apps/open-swe/**",
       "packages/shared/**"
@@ -13,14 +13,7 @@
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 3,
     "healthcheckPath": "/api/agent/ok",
-    "healthcheckTimeout": 30,
+    "healthcheckTimeout": 60,
     "numReplicas": 1
-  },
-  "environments": {
-    "production": {
-      "build": {
-        "buildCommand": "bash scripts/railway-build.sh"
-      }
-    }
   }
 }
