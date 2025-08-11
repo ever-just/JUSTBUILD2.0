@@ -14,8 +14,8 @@ const LANGGRAPH_API_URL = process.env.LANGGRAPH_API_URL ?? "http://localhost:202
 
 async function proxyToLangGraph(request: NextRequest) {
   try {
-    // Extract path from URL, removing the /api/runs/ prefix
-    const path = request.nextUrl.pathname.replace(/^\/api\/runs\//, "");
+    // Extract path from URL, mapping /api/runs/* to runs/*
+    const path = request.nextUrl.pathname.replace(/^\/api\/runs\//, "runs/");
     
     // Construct target URL
     const targetUrl = new URL(`${LANGGRAPH_API_URL}/${path}`);
