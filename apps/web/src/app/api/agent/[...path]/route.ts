@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getGitHubToken } from "@/lib/auth";
+import { encryptSecretEdge } from "./edge-crypto";
+import {
+  GITHUB_TOKEN_COOKIE,
+  GITHUB_INSTALLATION_TOKEN_COOKIE,
+  GITHUB_INSTALLATION_NAME,
+  GITHUB_INSTALLATION_ID,
+  GITHUB_INSTALLATION_ID_COOKIE,
+} from "@open-swe/shared/constants";
 
-// Simple proxy without Edge Runtime incompatible dependencies
+// Proxy with Edge Runtime compatible authentication
 const LANGGRAPH_API_URL = process.env.LANGGRAPH_API_URL ?? "http://localhost:2024";
 
 async function proxyToLangGraph(request: NextRequest) {
@@ -26,6 +35,9 @@ async function proxyToLangGraph(request: NextRequest) {
       }
     });
 
+    // Add GitHub authentication headers
+    await addGitHubAuthHeaders(request, headers);
+
     // Make the request to LangGraph
     const response = await fetch(targetUrl.toString(), {
       method: request.method,
@@ -50,6 +62,43 @@ async function proxyToLangGraph(request: NextRequest) {
       { error: "Proxy request failed", details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
+  }
+}
+
+async function addGitHubAuthHeaders(request: NextRequest, headers: Headers) {
+  // Get GitHub token data from cookies
+  const tokenData = getGitHubToken(request);
+  if (!tokenData) {
+    throw new Error("GitHub authentication required");
+  }
+
+  const encryptionKey = process.env.SECRETS_ENCRYPTION_KEY;
+  if (!encryptionKey) {
+    throw new Error("SECRETS_ENCRYPTION_KEY not configured");
+  }
+
+  // Get installation ID from cookies
+  const installationId = request.cookies.get(GITHUB_INSTALLATION_ID_COOKIE)?.value;
+  if (!installationId) {
+    throw new Error("GitHub installation ID missing");
+  }
+
+  // For now, use a simple installation name (you may need to adjust this based on your setup)
+  const installationName = "default"; // TODO: Get actual installation name
+
+  try {
+    // Encrypt tokens using Edge Runtime compatible crypto
+    const encryptedAccessToken = await encryptSecretEdge(tokenData.access_token, encryptionKey);
+    const encryptedInstallationToken = await encryptSecretEdge(tokenData.access_token, encryptionKey); // Using access token as installation token for now
+
+    // Add required authentication headers
+    headers.set(GITHUB_INSTALLATION_NAME, installationName);
+    headers.set(GITHUB_INSTALLATION_ID, installationId);
+    headers.set(GITHUB_INSTALLATION_TOKEN_COOKIE, encryptedInstallationToken);
+    headers.set(GITHUB_TOKEN_COOKIE, encryptedAccessToken);
+
+  } catch (error) {
+    throw new Error(`Failed to encrypt tokens: ${error instanceof Error ? error.message : "Unknown error"}`);
   }
 }
 
