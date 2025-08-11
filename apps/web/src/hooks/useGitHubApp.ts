@@ -64,6 +64,7 @@ interface UseGitHubAppReturn {
   installationsError: string | null;
   switchInstallation: (installationId: string) => Promise<void>;
   refreshInstallations: () => Promise<void>;
+  checkInstallation: (page?: number, append?: boolean) => Promise<void>;
 
   // Repository state and pagination
   repositories: Repository[];
@@ -489,6 +490,7 @@ export function useGitHubApp(): UseGitHubAppReturn {
     installationsError,
     switchInstallation,
     refreshInstallations,
+    checkInstallation,
 
     // Repository state and pagination
     repositories,

@@ -22,3 +22,4 @@ services:
 1. `npx` automatically finds executables installed in node_modules/.bin/
 2. This ensures langgraphjs is found regardless of PATH configuration
 3. The command matches exactly what's in the package.json dev script but with npx handling the binary resolution
+

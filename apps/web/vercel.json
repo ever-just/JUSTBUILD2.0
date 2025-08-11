@@ -1,10 +1,9 @@
 {
   "framework": "nextjs",
-  "buildCommand": "yarn workspace @open-swe/shared build && yarn workspace @open-swe/web build",
+  "buildCommand": "cd ../.. && yarn workspace @open-swe/shared build && yarn workspace @open-swe/web build",
   "outputDirectory": ".next",
-  "installCommand": "yarn install --immutable || yarn install --no-immutable",
+  "installCommand": "cd ../.. && yarn install --immutable || yarn install --no-immutable",
   "devCommand": "yarn workspace @open-swe/web dev",
-  "rootDirectory": "apps/web",
   "functions": {
     "src/app/api/**/*.ts": {
       "maxDuration": 60
