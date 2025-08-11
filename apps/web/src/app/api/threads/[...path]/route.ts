@@ -38,11 +38,22 @@ async function proxyToLangGraph(request: NextRequest) {
     // Add GitHub authentication headers
     await addGitHubAuthHeaders(request, headers);
 
+    // Properly handle request body for Edge Runtime compatibility
+    let body = undefined;
+    if (request.method !== 'GET' && request.method !== 'HEAD') {
+      const contentType = request.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        body = JSON.stringify(await request.json());
+      } else {
+        body = await request.text();
+      }
+    }
+
     // Make the request to LangGraph
     const response = await fetch(targetUrl.toString(), {
       method: request.method,
       headers,
-      body: request.method !== 'GET' && request.method !== 'HEAD' ? request.body : undefined,
+      body,
     });
 
     // Get response headers
