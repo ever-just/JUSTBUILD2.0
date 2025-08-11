@@ -63,5 +63,5 @@ RUN touch /app/apps/open-swe/.env
 # Set working directory to app root where langgraph.json is located
 WORKDIR /app
 
-# Start the application using npx to ensure langgraphjs is found
-CMD ["npx", "langgraphjs", "dev", "--no-browser", "--config", "langgraph.json"]
+# Start the application using npx to ensure langgraphjs is found, bound to all interfaces
+CMD ["npx", "langgraphjs", "dev", "--no-browser", "--host", "0.0.0.0", "--config", "langgraph.json"]
