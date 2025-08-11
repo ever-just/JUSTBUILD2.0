@@ -113,8 +113,10 @@ export function useGitHubApp(): UseGitHubAppReturn {
   } = useGitHubInstallations();
 
   // Installation and general state
-  const [isInstalled, setIsInstalled] = useState<boolean | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  // Derive isInstalled from installations list instead of repository fetch
+  const isInstalled = installations.length > 0;
+  // Use installationsLoading as the main loading indicator
+  const isLoading = installationsLoading;
   const [error, setError] = useState<string | null>(null);
 
   // Repository state and pagination
@@ -198,7 +200,6 @@ export function useGitHubApp(): UseGitHubAppReturn {
     page: number = 1,
     append: boolean = false,
   ) => {
-    if (!append) setIsLoading(true);
     if (append) setRepositoriesLoadingMore(true);
     setError(null);
 
@@ -217,21 +218,20 @@ export function useGitHubApp(): UseGitHubAppReturn {
 
         setRepositoriesPage(data.pagination?.page || page);
         setRepositoriesHasMore(data.pagination?.hasMore || false);
-        setIsInstalled(true);
+        // No longer need to set isInstalled - it's derived from installations
       } else {
         const errorData = await response.json();
         if (errorData.error.includes("installation")) {
-          setIsInstalled(false);
+          // Installation issue - this is expected if no installation cookie yet
+          // Don't set error for installation-related issues since isInstalled is derived elsewhere
         } else {
           setError(errorData.error);
-          setIsInstalled(false);
         }
       }
     } catch {
       setError("Failed to check GitHub App installation status");
-      setIsInstalled(false);
+      // No longer need to set isInstalled - it's derived from installations
     } finally {
-      setIsLoading(false);
       setRepositoriesLoadingMore(false);
     }
   };
