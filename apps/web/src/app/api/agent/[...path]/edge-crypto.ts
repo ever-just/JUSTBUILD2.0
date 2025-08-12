@@ -58,10 +58,18 @@ export async function encryptSecretEdge(secret: string, encryptionKey: string): 
       data
     );
 
-    // Combine IV and encrypted data
-    const combined = new Uint8Array(IV_LENGTH + encryptedBuffer.byteLength);
+    // CRITICAL: Web Crypto API's AES-GCM returns EncryptedData + AuthTag concatenated
+    // Railway expects: IV + EncryptedData + AuthTag
+    // We need to extract the auth tag separately to match Railway's format
+    const encryptedArray = new Uint8Array(encryptedBuffer);
+    const encryptedData = encryptedArray.slice(0, encryptedArray.length - TAG_LENGTH);
+    const authTag = encryptedArray.slice(encryptedArray.length - TAG_LENGTH);
+
+    // Combine in Railway expected format: IV + EncryptedData + AuthTag
+    const combined = new Uint8Array(IV_LENGTH + encryptedData.length + TAG_LENGTH);
     combined.set(iv, 0);
-    combined.set(new Uint8Array(encryptedBuffer), IV_LENGTH);
+    combined.set(encryptedData, IV_LENGTH);
+    combined.set(authTag, IV_LENGTH + encryptedData.length);
 
     // Convert to base64
     return btoa(String.fromCharCode(...combined));
