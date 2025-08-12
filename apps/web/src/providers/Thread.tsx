@@ -88,7 +88,7 @@ export function ThreadProvider({ children }: { children: ReactNode }) {
         const altMetadata = assistantId.includes("-")
           ? { assistant_id: assistantId }
           : { graph_id: assistantId };
-        threadsResponse = await client.threads.search<GraphState>({
+        threadsResponse = await client.threads.list<GraphState>({
           limit: 100,
           metadata: altMetadata,
         });
