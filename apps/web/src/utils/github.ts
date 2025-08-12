@@ -1,7 +1,9 @@
 function getBaseApiUrl(): string {
-  let baseApiUrl = new URL(
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api",
-  ).href;
+  // TEMPORARY FIX: Use correct base URL for GitHub API calls
+  // let baseApiUrl = new URL(
+  //   process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api",
+  // ).href;
+  let baseApiUrl = "https://justbuild.everjust.com/api/";
   baseApiUrl = baseApiUrl.endsWith("/") ? baseApiUrl : `${baseApiUrl}/`;
   return baseApiUrl;
 }
