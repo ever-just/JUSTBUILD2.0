@@ -88,16 +88,7 @@ async function addGitHubAuthHeaders(request: NextRequest, headers: Headers) {
 async function proxyToLangGraph(request: NextRequest) {
   try {
     // CRITICAL FIX: Correct path mapping for threads endpoints
-    let path = request.nextUrl.pathname.replace(/^\/api\/threads\//, "threads/");
-    
-    // SPECIAL CASE: Map threads/search to threads with GET method (LangGraph list endpoint)
-    if (path === "threads/search") {
-      path = "threads";
-      // Convert POST search to GET list
-      if (request.method === "POST") {
-        // We'll handle this as a GET request to /threads with query params
-      }
-    }
+    const path = request.nextUrl.pathname.replace(/^\/api\/threads\//, "threads/");
     const targetUrl = new URL(`${LANGGRAPH_API_URL}/${path}`);
 
     // Forward query parameters
