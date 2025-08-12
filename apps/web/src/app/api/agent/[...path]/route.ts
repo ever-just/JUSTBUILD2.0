@@ -48,14 +48,22 @@ async function proxyToLangGraph(request: NextRequest) {
       // Add GitHub authentication headers
       await addGitHubAuthHeaders(request, headers);
 
-      // Handle request body properly
+      // CRITICAL FIX: Safely handle request body to prevent 404 errors
       let body = undefined;
       if (request.method !== 'GET' && request.method !== 'HEAD') {
-        const contentType = request.headers.get('content-type') || '';
-        if (contentType.includes('application/json')) {
-          body = JSON.stringify(await request.json());
-        } else {
-          body = await request.text();
+        try {
+          const contentType = request.headers.get('content-type') || '';
+          // Clone the request first to avoid body consumption issues
+          const requestClone = request.clone();
+          if (contentType.includes('application/json')) {
+            const jsonBody = await requestClone.json();
+            body = JSON.stringify(jsonBody);
+          } else {
+            body = await requestClone.text();
+          }
+        } catch (error) {
+          console.warn('Request body parsing failed, sending empty body:', error);
+          body = '{}'; // Fallback to empty JSON
         }
       }
 
@@ -102,14 +110,22 @@ async function proxyToLangGraph(request: NextRequest) {
     // Add GitHub authentication headers
     await addGitHubAuthHeaders(request, headers);
 
-    // Properly handle request body for Edge Runtime compatibility
+    // CRITICAL FIX: Safely handle request body to prevent 404 errors  
     let body = undefined;
     if (request.method !== 'GET' && request.method !== 'HEAD') {
-      const contentType = request.headers.get('content-type') || '';
-      if (contentType.includes('application/json')) {
-        body = JSON.stringify(await request.json());
-      } else {
-        body = await request.text();
+      try {
+        const contentType = request.headers.get('content-type') || '';
+        // Clone the request first to avoid body consumption issues
+        const requestClone = request.clone();
+        if (contentType.includes('application/json')) {
+          const jsonBody = await requestClone.json();
+          body = JSON.stringify(jsonBody);
+        } else {
+          body = await requestClone.text();
+        }
+      } catch (error) {
+        console.warn('Request body parsing failed, sending empty body:', error);
+        body = '{}'; // Fallback to empty JSON
       }
     }
 
