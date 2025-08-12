@@ -14,13 +14,22 @@ const LANGGRAPH_API_URL = process.env.LANGGRAPH_API_URL ?? "http://localhost:202
 
 async function proxyToLangGraph(request: NextRequest) {
   try {
-    // TEMPORARY: Block threads/runs/assistants to force use of dedicated proxies
+    // Handle threads/runs/assistants requests that should go to dedicated proxies
     const pathname = request.nextUrl.pathname;
     if (pathname.includes('/threads/') || pathname.includes('/runs/') || pathname.includes('/assistants/')) {
-      return NextResponse.json(
-        { error: "Use dedicated proxy routes", path: pathname, redirect: pathname.replace('/agent', '') },
-        { status: 400 }
-      );
+      // Redirect to the correct dedicated proxy route by rewriting the path
+      const correctedPath = pathname.replace('/api/agent', '/api');
+      
+      // Forward to the correct proxy by making an internal request
+      const correctedUrl = new URL(correctedPath, request.url);
+      const correctedRequest = new Request(correctedUrl, {
+        method: request.method,
+        headers: request.headers,
+        body: request.method !== 'GET' && request.method !== 'HEAD' ? request.body : undefined,
+      });
+      
+      // Use fetch to forward to the correct proxy
+      return await fetch(correctedRequest);
     }
     
     // Extract path from URL, removing the /api/agent/ prefix
