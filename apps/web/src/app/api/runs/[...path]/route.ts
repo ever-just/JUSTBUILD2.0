@@ -33,9 +33,27 @@ async function addGitHubAuthHeaders(request: NextRequest, headers: Headers) {
   const installationName = "default"; // TODO: Get actual installation name
 
   try {
+    // Get installation token from GitHub API
+    const installationTokenResponse = await fetch(`https://api.github.com/app/installations/${installationId}/access_tokens`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${tokenData.access_token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'User-Agent': 'JustBuild-App'
+      }
+    });
+
+    let actualInstallationToken = tokenData.access_token; // fallback
+    if (installationTokenResponse.ok) {
+      const installationTokenData = await installationTokenResponse.json();
+      actualInstallationToken = installationTokenData.token;
+    } else {
+      console.warn("Failed to get installation token, using access token as fallback");
+    }
+
     // Encrypt tokens using Edge Runtime compatible crypto
     const encryptedAccessToken = await encryptSecretEdge(tokenData.access_token, encryptionKey);
-    const encryptedInstallationToken = await encryptSecretEdge(tokenData.access_token, encryptionKey); // Using access token as installation token for now
+    const encryptedInstallationToken = await encryptSecretEdge(actualInstallationToken, encryptionKey);
 
     // Add authentication headers
     headers.set("x-github-installation-name", installationName);
