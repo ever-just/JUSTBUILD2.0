@@ -41,9 +41,9 @@ function getThreadSearchMetadata(
 }
 
 export function ThreadProvider({ children }: { children: ReactNode }) {
-  // PERMANENT FIX: Direct connection to Railway LangGraph server
+  // HYBRID FIX: Use Vercel proxies for authentication + correct path mapping
   // const apiUrl: string | undefined = process.env.NEXT_PUBLIC_API_URL ?? "";
-  const apiUrl: string | undefined = "https://justbuild20-production.up.railway.app";
+  const apiUrl: string | undefined = "https://justbuild.everjust.com/api";
   const assistantId: string | undefined =
     process.env.NEXT_PUBLIC_ASSISTANT_ID ?? "";
 

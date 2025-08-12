@@ -136,9 +136,9 @@ export async function fetchThreadStatus(
   sessionCache?: SessionCache,
 ): Promise<ThreadStatusData> {
   try {
-    // PERMANENT FIX: Direct connection to Railway LangGraph server
+    // HYBRID FIX: Use Vercel proxies for authentication + correct path mapping
     // const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
-    const apiUrl = "https://justbuild20-production.up.railway.app";
+    const apiUrl = "https://justbuild.everjust.com/api";
     if (!apiUrl) {
       throw new Error("API URL not configured");
     }

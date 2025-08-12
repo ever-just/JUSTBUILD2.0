@@ -27,7 +27,14 @@ app.use("*", cors({
     "If-Modified-Since",
     "X-Hub-Signature-256",
     "x-github-delivery",
-    "x-github-event"
+    "x-github-event",
+    // Authentication headers for direct browser connections
+    "x-github-installation-name",
+    "x-github-installation-id", 
+    "x-github-installation-token",
+    "x-github-token",
+    "x-github-user-id",
+    "x-github-user-login"
   ],
   credentials: true
 }));

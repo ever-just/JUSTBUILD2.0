@@ -47,9 +47,9 @@ export default function ThreadPage({
   const router = useRouter();
   const { thread_id } = use(params);
   const stream = useStream<ManagerGraphState>({
-    // PERMANENT FIX: Direct connection to Railway LangGraph server
+    // HYBRID FIX: Use Vercel proxies for authentication + correct path mapping
     // apiUrl: process.env.NEXT_PUBLIC_API_URL ?? "",
-    apiUrl: "https://justbuild20-production.up.railway.app",
+    apiUrl: "https://justbuild.everjust.com/api",
     assistantId: MANAGER_GRAPH_ID,
     threadId: thread_id,
     reconnectOnMount: true,
