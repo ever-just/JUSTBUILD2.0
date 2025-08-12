@@ -136,9 +136,9 @@ export async function fetchThreadStatus(
   sessionCache?: SessionCache,
 ): Promise<ThreadStatusData> {
   try {
-    // CRITICAL FIX: LangChain client needs /api prefix for endpoint construction
+    // PERMANENT FIX: Direct connection to Railway LangGraph server
     // const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
-    const apiUrl = "https://justbuild.everjust.com/api";
+    const apiUrl = "https://justbuild20-production.up.railway.app";
     if (!apiUrl) {
       throw new Error("API URL not configured");
     }

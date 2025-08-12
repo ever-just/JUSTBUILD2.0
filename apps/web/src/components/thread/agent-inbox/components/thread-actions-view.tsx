@@ -85,9 +85,9 @@ export function ThreadActionsView({
     interrupt,
     stream,
   });
-  // CRITICAL FIX: LangChain client needs /api prefix for endpoint construction
+  // PERMANENT FIX: Direct connection to Railway LangGraph server
   // const apiUrl: string | undefined = process.env.NEXT_PUBLIC_API_URL ?? "";
-  const apiUrl: string | undefined = "https://justbuild.everjust.com/api";
+  const apiUrl: string | undefined = "https://justbuild20-production.up.railway.app";
 
   const handleOpenInStudio = () => {
     if (!apiUrl) {

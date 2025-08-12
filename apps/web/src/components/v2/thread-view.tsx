@@ -179,7 +179,7 @@ export function ThreadView({
   const plannerStream = useStream<PlannerGraphState>({
     // TEMPORARY FIX: Use correct base URL for LangChain client
     // apiUrl: process.env.NEXT_PUBLIC_API_URL,
-    apiUrl: "https://justbuild.everjust.com/api",
+    apiUrl: "https://justbuild20-production.up.railway.app",
     assistantId: PLANNER_GRAPH_ID,
     reconnectOnMount: true,
     threadId: plannerSession?.threadId,
@@ -207,7 +207,7 @@ export function ThreadView({
   const programmerStream = useStream<GraphState>({
     // TEMPORARY FIX: Use correct base URL for LangChain client
     // apiUrl: process.env.NEXT_PUBLIC_API_URL,
-    apiUrl: "https://justbuild.everjust.com/api",
+    apiUrl: "https://justbuild20-production.up.railway.app",
     assistantId: PROGRAMMER_GRAPH_ID,
     reconnectOnMount: true,
     threadId: programmerSession?.threadId,

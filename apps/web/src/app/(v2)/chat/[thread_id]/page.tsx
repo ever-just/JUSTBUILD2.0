@@ -47,9 +47,9 @@ export default function ThreadPage({
   const router = useRouter();
   const { thread_id } = use(params);
   const stream = useStream<ManagerGraphState>({
-    // CRITICAL FIX: LangChain client needs /api prefix for endpoint construction
+    // PERMANENT FIX: Direct connection to Railway LangGraph server
     // apiUrl: process.env.NEXT_PUBLIC_API_URL ?? "",
-    apiUrl: "https://justbuild.everjust.com/api",
+    apiUrl: "https://justbuild20-production.up.railway.app",
     assistantId: MANAGER_GRAPH_ID,
     threadId: thread_id,
     reconnectOnMount: true,
