@@ -10,6 +10,7 @@ import {
 } from "@open-swe/shared/constants";
 
 const LANGGRAPH_API_URL = process.env.LANGGRAPH_API_URL ?? "http://localhost:2024";
+// Force Vercel redeploy with fixed encryption format
 
 async function addGitHubAuthHeaders(request: NextRequest, headers: Headers) {
   // Get GitHub token data from cookies
