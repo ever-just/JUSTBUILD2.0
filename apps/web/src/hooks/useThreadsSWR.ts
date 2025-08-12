@@ -121,7 +121,7 @@ export function useThreadsSWR<
         ? paginationWithDefaults
         : undefined;
 
-    return await client.threads.list<TGraphState>(searchArgs);
+    return await client.threads.search<TGraphState>(searchArgs);
   };
 
   const { data, error, isLoading, mutate, isValidating } = useSWR(
