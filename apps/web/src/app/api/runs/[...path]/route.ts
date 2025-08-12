@@ -33,6 +33,23 @@ async function addGitHubAuthHeaders(request: NextRequest, headers: Headers) {
   const installationName = "default"; // TODO: Get actual installation name
 
   try {
+    // Get user info from GitHub API
+    const userResponse = await fetch('https://api.github.com/user', {
+      headers: {
+        'Authorization': `Bearer ${tokenData.access_token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'User-Agent': 'JustBuild-App'
+      }
+    });
+
+    let userId = "";
+    let userLogin = "";
+    if (userResponse.ok) {
+      const userData = await userResponse.json();
+      userId = userData.id?.toString() || "";
+      userLogin = userData.login || "";
+    }
+
     // Get installation token from GitHub API
     const installationTokenResponse = await fetch(`https://api.github.com/app/installations/${installationId}/access_tokens`, {
       method: 'POST',
@@ -60,6 +77,8 @@ async function addGitHubAuthHeaders(request: NextRequest, headers: Headers) {
     headers.set("x-github-installation-id", installationId);
     headers.set("x-github-installation-token", encryptedInstallationToken);
     headers.set("x-github-token", encryptedAccessToken);
+    headers.set("x-github-user-id", userId);
+    headers.set("x-github-user-login", userLogin);
   } catch (error) {
     console.error("Error encrypting GitHub tokens:", error);
     throw new Error("Failed to encrypt GitHub tokens");
