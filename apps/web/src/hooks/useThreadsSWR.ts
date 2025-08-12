@@ -85,7 +85,9 @@ export function useThreadsSWR<
     ...pagination,
   };
 
-  const apiUrl: string | undefined = process.env.NEXT_PUBLIC_API_URL ?? "";
+  // TEMPORARY FIX: Use correct base URL for LangChain client
+  // const apiUrl: string | undefined = process.env.NEXT_PUBLIC_API_URL ?? "";
+  const apiUrl: string | undefined = "https://justbuild.everjust.com";
 
   // Create a unique key for SWR caching based on assistantId and pagination parameters
   const swrKey = useMemo(() => {

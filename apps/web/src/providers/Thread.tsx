@@ -41,7 +41,9 @@ function getThreadSearchMetadata(
 }
 
 export function ThreadProvider({ children }: { children: ReactNode }) {
-  const apiUrl: string | undefined = process.env.NEXT_PUBLIC_API_URL ?? "";
+  // TEMPORARY FIX: Use correct base URL for LangChain client
+  // const apiUrl: string | undefined = process.env.NEXT_PUBLIC_API_URL ?? "";
+  const apiUrl: string | undefined = "https://justbuild.everjust.com";
   const assistantId: string | undefined =
     process.env.NEXT_PUBLIC_ASSISTANT_ID ?? "";
 

@@ -136,7 +136,9 @@ export async function fetchThreadStatus(
   sessionCache?: SessionCache,
 ): Promise<ThreadStatusData> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
+    // TEMPORARY FIX: Use correct base URL for LangChain client
+    // const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
+    const apiUrl = "https://justbuild.everjust.com";
     if (!apiUrl) {
       throw new Error("API URL not configured");
     }
