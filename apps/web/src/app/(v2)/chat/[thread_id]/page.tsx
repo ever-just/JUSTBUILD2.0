@@ -47,9 +47,9 @@ export default function ThreadPage({
   const router = useRouter();
   const { thread_id } = use(params);
   const stream = useStream<ManagerGraphState>({
-    // TEMPORARY FIX: Use correct base URL for LangChain client
+    // CRITICAL FIX: LangChain client needs /api prefix for endpoint construction
     // apiUrl: process.env.NEXT_PUBLIC_API_URL ?? "",
-    apiUrl: "https://justbuild.everjust.com",
+    apiUrl: "https://justbuild.everjust.com/api",
     assistantId: MANAGER_GRAPH_ID,
     threadId: thread_id,
     reconnectOnMount: true,

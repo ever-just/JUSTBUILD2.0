@@ -85,9 +85,9 @@ export function ThreadActionsView({
     interrupt,
     stream,
   });
-  // TEMPORARY FIX: Use correct base URL for LangChain client
+  // CRITICAL FIX: LangChain client needs /api prefix for endpoint construction
   // const apiUrl: string | undefined = process.env.NEXT_PUBLIC_API_URL ?? "";
-  const apiUrl: string | undefined = "https://justbuild.everjust.com";
+  const apiUrl: string | undefined = "https://justbuild.everjust.com/api";
 
   const handleOpenInStudio = () => {
     if (!apiUrl) {

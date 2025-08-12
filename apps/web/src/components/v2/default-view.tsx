@@ -85,7 +85,7 @@ export function DefaultView({ threads, threadsLoading }: DefaultViewProps) {
   const [quickActionPrompt, setQuickActionPrompt] = useState("");
   // TEMPORARY FIX: Use correct base URL for LangChain client  
   // const apiUrl: string | undefined = process.env.NEXT_PUBLIC_API_URL ?? "";
-  const apiUrl: string | undefined = "https://justbuild.everjust.com";
+  const apiUrl: string | undefined = "https://justbuild.everjust.com/api";
   const [draftToLoad, setDraftToLoad] = useState("");
   const assistantId: string | undefined = MANAGER_GRAPH_ID;
   const {
