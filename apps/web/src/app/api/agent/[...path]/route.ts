@@ -14,22 +14,68 @@ const LANGGRAPH_API_URL = process.env.LANGGRAPH_API_URL ?? "http://localhost:202
 
 async function proxyToLangGraph(request: NextRequest) {
   try {
-    // Handle threads/runs/assistants requests that should go to dedicated proxies
+    // Handle threads/runs/assistants requests by directly proxying to Railway
+    // This avoids internal forwarding complexity and body consumption issues
     const pathname = request.nextUrl.pathname;
     if (pathname.includes('/threads/') || pathname.includes('/runs/') || pathname.includes('/assistants/')) {
-      // Redirect to the correct dedicated proxy route by rewriting the path
-      const correctedPath = pathname.replace('/api/agent', '/api');
+      // Extract the correct path for Railway backend
+      let railwayPath;
+      if (pathname.includes('/threads/')) {
+        railwayPath = pathname.replace(/^\/api\/agent\//, '');
+      } else if (pathname.includes('/runs/')) {
+        railwayPath = pathname.replace(/^\/api\/agent\//, '');
+      } else if (pathname.includes('/assistants/')) {
+        railwayPath = pathname.replace(/^\/api\/agent\//, '');
+      }
       
-      // Forward to the correct proxy by making an internal request
-      const correctedUrl = new URL(correctedPath, request.url);
-      const correctedRequest = new Request(correctedUrl, {
-        method: request.method,
-        headers: request.headers,
-        body: request.method !== 'GET' && request.method !== 'HEAD' ? request.body : undefined,
+      // Construct target URL for Railway
+      const targetUrl = new URL(`${LANGGRAPH_API_URL}/${railwayPath}`);
+      
+      // Forward query parameters
+      request.nextUrl.searchParams.forEach((value, key) => {
+        targetUrl.searchParams.append(key, value);
       });
-      
-      // Use fetch to forward to the correct proxy
-      return await fetch(correctedRequest);
+
+      // Get headers
+      const headers = new Headers();
+      request.headers.forEach((value, key) => {
+        if (!key.toLowerCase().startsWith('host') && 
+            !key.toLowerCase().startsWith('content-length')) {
+          headers.set(key, value);
+        }
+      });
+
+      // Add GitHub authentication headers
+      await addGitHubAuthHeaders(request, headers);
+
+      // Handle request body properly
+      let body = undefined;
+      if (request.method !== 'GET' && request.method !== 'HEAD') {
+        const contentType = request.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+          body = JSON.stringify(await request.json());
+        } else {
+          body = await request.text();
+        }
+      }
+
+      // Make request directly to Railway
+      const response = await fetch(targetUrl.toString(), {
+        method: request.method,
+        headers,
+        body,
+      });
+
+      // Get response headers
+      const responseHeaders = new Headers(response.headers);
+      responseHeaders.delete("Content-Encoding");
+
+      // Return proper NextResponse
+      return new NextResponse(response.body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: responseHeaders,
+      });
     }
     
     // Extract path from URL, removing the /api/agent/ prefix
