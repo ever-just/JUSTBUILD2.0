@@ -1,3 +1,10 @@
+> ## ⛔️ ARCHIVED — not maintained
+>
+> This repository is read-only. It is kept for reference and history.
+> JUSTBUILD 2.0, an EverJust fork of langchain-ai/open-swe with 65 original commits. The JUSTBUILD line is discontinued; everjust.dev no longer resolves.
+>
+> Archived 2026-09-04.
+
 <div align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="apps/docs/logo/dark.svg">
@@ -44,4 +51,3 @@ Open SWE can be used in multiple ways:
 # Documentation
 
 To get started using Open SWE locally, see the [documentation here](https://docs.langchain.com/labs/swe/).
-
