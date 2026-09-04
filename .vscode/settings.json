@@ -5,7 +5,7 @@
       "command": "npx",
       "args": ["-y", "@open-mcp/vercel"],
       "env": {
-        "API_KEY": "lcinQcFYVmNBZd85QvXTw3cr"
+        "API_KEY": "<VERCEL_CREDENTIAL_REMOVED_2026-09-04>"
       },
       "enabled": true,
       "description": "Vercel MCP server for interacting with Vercel deployments"
